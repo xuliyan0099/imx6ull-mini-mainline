@@ -1,0 +1,12 @@
+[submodule "components/u-boot"]
+	path = components/u-boot
+	url = https://github.com/xuliyan0099/imx6ull-mini-uboot.git
+[submodule "components/linux"]
+	path = components/linux
+	url = https://github.com/xuliyan0099/imx6ull-mini-linux.git
+[submodule "components/busybox-rootfs"]
+	path = components/busybox-rootfs
+	url = https://github.com/xuliyan0099/imx6ull-mini-busybox-rootfs.git
+[submodule "components/lvgl"]
+	path = components/lvgl
+	url = https://github.com/xuliyan0099/imx6ull-mini-lvgl.git

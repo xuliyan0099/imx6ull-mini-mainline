@@ -4,19 +4,16 @@
 # 构建产物
 /out/
 
-# 旧板固件原件（仅本地对照用）
+# 旧板固件原件（仅本地对照）
 /reference/
 
-# 离线 git bundle（55 MB，按需本地保留）
+# 离线 bundle
 /patches/*.bundle
 
-# 编译中间文件（src/ 与 out/ 已整体忽略，这里只兜底散落物）
 *.o
 *.a
 *.so
 *.su
-*.mod
 *.tmp
-core
 .DS_Store
 Thumbs.db

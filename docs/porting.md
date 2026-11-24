@@ -15,7 +15,7 @@
 
 ## 2. U-Boot v2026.10
 
-改动集中在一个补丁（`patches/0001-mx6ull-alientek-mini-port.patch`）：
+U-Boot 部分在独立仓库 `components/u-boot`（[imx6ull-mini-uboot](https://github.com/xuliyan0099/imx6ull-mini-uboot)），改动集中在一个补丁（`components/u-boot/board/0001-mx6ull-alientek-mini-port.patch`）：
 
 1. `configs/mx6ull_alientek_mini_defconfig`
    - 复用上游 `mx6ull_14x14_evk` 的 SoC 目标（`CONFIG_TARGET_MX6ULL_14X14_EVK=y`），只改板级差异。
@@ -33,14 +33,14 @@
 构建：
 
 ```bash
-make -C src/u-boot mx6ull_alientek_mini_defconfig
-make -C src/u-boot CROSS_COMPILE=arm-linux-gnueabihf- -j$(nproc)
-# 产物 src/u-boot/u-boot-dtb.imx，400,384 B（偏移 0x400 有 IVT，可写 eMMC/SD）
+bash components/u-boot/tools/build.sh
+# 内部仍是 make defconfig + make，源码在 src/u-boot
+# 产物 components/u-boot/out/u-boot-dtb.imx，400,384 B（偏移 0x400 有 IVT，可写 eMMC/SD）
 ```
 
 ## 3. Linux 7.3.6
 
-内核没有厂商改动，靠三样东西落到板上：
+内核部分在独立仓库 `components/linux`（[imx6ull-mini-linux](https://github.com/xuliyan0099/imx6ull-mini-linux)），内核本身没有厂商改动，靠三样东西落到板上：
 
 1. **`.config`**：来源是旧固件 `zImage` 里 IKCFG 段反推出的真实配置（`docs/recovery.md`），7.3.6 上跑 `olddefconfig` 后仅补齐新增符号。关键项：`CONFIG_SOC_IMX6UL=y`、`CONFIG_DRM_MXS=y` + `CONFIG_DRM_MXSFB=y` + `CONFIG_DRM_FBDEV_EMULATION=y`（mxsfb 走 DRM，靠 fbdev 仿真出 `/dev/fb0`）、`CONFIG_INPUT_EVDEV`、`CONFIG_TOUCHSCREEN_GOODIX`、`CONFIG_MMC_SDHCI_ESDHC_IMX`、`CONFIG_FEC`、`CONFIG_EXT4_FS`、`CONFIG_BLK_DEV_INITRD`、gzip 压缩内核。
 2. **`arch/arm/boot/dts/nxp/imx/imx6ull-alientek-mini-4.3.dts`**：直接由旧固件 dtb 反编译（1567 行），`model` = `Alientek i.MX6ULL Mini (ATK-4.3RGBLCD 800x480)`，`compatible` 仍沿用 `fsl,imx6ull-14x14-evk`，所以复用 EVK 的机器描述。
@@ -52,8 +52,8 @@ make -C src/u-boot CROSS_COMPILE=arm-linux-gnueabihf- -j$(nproc)
 构建：
 
 ```bash
-make -C src/linux ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- olddefconfig
-make -C src/linux ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -j$(nproc) zImage dtbs
+bash components/linux/tools/build.sh
+# 内部：olddefconfig + make zImage dtbs，源码在 src/linux
 ```
 
 结果：`zImage` 10,103,928 B，`imx6ull-alientek-mini-4.3.dtb` 34,692 B。DTB 与旧固件 sha256 完全一致（`1a41ee56…f95f9a`），说明设备树还原无误差。
@@ -69,7 +69,7 @@ make -C src/linux ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -j$(nproc) zImage 
 
 ## 5. LVGL 9.6.0 仪表盘
 
-四个源文件（`app/lvgl/src`）：
+四个源文件（`components/lvgl/src`，仓库 [imx6ull-mini-lvgl](https://github.com/xuliyan0099/imx6ull-mini-lvgl)）：
 
 | 文件 | 职责 |
 | --- | --- |
@@ -82,9 +82,8 @@ make -C src/linux ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -j$(nproc) zImage 
 - 交叉编译（静态，rootfs 里不需要额外库）：
 
 ```bash
-make -C app/lvgl CC=arm-linux-gnueabihf-gcc LVGL_DIR=<src/lvgl> \
-     LDFLAGS='-static -Wl,--gc-sections -lm -lpthread'
-arm-linux-gnueabihf-strip app/lvgl/lvgl_demo   # 1.03 MB → 849 KB
+bash components/lvgl/tools/build.sh       # 静态链接 + 交叉 strip
+# 等价于 make -C components/lvgl static CC=arm-linux-gnueabihf-gcc LVGL_DIR=<src/lvgl>
 ```
 
 ## 6. 统一 QEMU 接入约定
