@@ -1,0 +1,272 @@
+fatload mmc 0:1 0x80800000 zImage
+10103928 bytes read in 11178 ms (881.8 KiB/s)
+=> fatload mmc 0:1 0x83000000 mini.dtb
+34692 bytes read in 75 ms (451.2 KiB/s)
+=> fatload mmc 0:1 0x84000000 initrd.uim
+1619140 bytes read in 1839 ms (859.4 KiB/s)
+=> setenv bootargs console=ttymxc0,115200 root=/dev/ram0 rw
+=> bootz 0x80800000 0x84000000 0x83000000
+Kernel image @ 0x80800000 [ 0x000000 - 0x9a2c78 ]
+## Loading init Ramdisk from Legacy Image at 84000000 ...
+   Image Name:   imx6ull mini initramfs
+   Image Type:   ARM Linux RAMDisk Image (gzip compressed)
+   Data Size:    1619076 Bytes = 1.5 MiB
+   Load Address: 00000000
+   Entry Point:  00000000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 83000000
+   Booting using the fdt blob at 0x83000000
+Working FDT set to 83000000
+   Loading Device Tree to 9df7c000, end 9df87783 ... OK
+Working FDT set to 9df7c000
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 7.3.6 (xv6@GEM12) (arm-linux-gnueabihf-gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #1 SMP Wed Nov 25 01:00:41 CST 2026
+[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d
+[    0.000000] CPU: div instructions available: patching division code
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] OF: fdt: Machine model: Alientek i.MX6ULL Mini (ATK-4.3RGBLCD 800x480)
+[    0.000000] Memory policy: Data cache writealloc
+[    0.000000] cma: Reserved 64 MiB at 0x98000000
+[    0.000000] OF: reserved mem: Reserved memory: No reserved-memory node in the DT
+[    0.000000] Zone ranges:
+[    0.000000]   Normal   [mem 0x0000000080000000-0x000000009fffffff]
+[    0.000000]   HighMem  empty
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000080000000-0x000000009fffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000080000000-0x000000009fffffff]
+[    0.000000] percpu: Embedded 14 pages/cpu s28620 r8192 d20532 u57344
+[    0.000000] Kernel command line: console=ttymxc0,115200 root=/dev/ram0 rw
+[    0.000000] printk: log buffer data + meta data: 262144 + 819200 = 1081344 bytes
+[    0.000000] Dentry cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 32768 (order: 5, 131072 bytes, linear)
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 131072
+[    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] rcu: 	RCU event tracing is enabled.
+[    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=4 to nr_cpu_ids=1.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=1
+[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+[    0.000000] Switching to timer-based delay loop, resolution 41ns
+[    0.000152] sched_clock: 32 bits at 24MHz, resolution 41ns, wraps every 89478484971ns
+[    0.000424] clocksource: mxc_timer1: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 79635851949 ns
+[    0.012217] Console: colour dummy device 80x30
+[    0.017880] Calibrating delay loop (skipped), value calculated using timer frequency.. 48.00 BogoMIPS (lpj=240000)
+[    0.018006] CPU: Testing write buffer coherency: ok
+[    0.018917] pid_max: default: 32768 minimum: 301
+[    0.021770] VFS: Disk quotas dquot_6.6.0
+[    0.021931] VFS: Dquot-cache hash table entries: 1024 (4096 bytes)
+[    0.022266] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.022314] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.033965] VFS: Finished mounting rootfs on nullfs
+[    0.054745] CPU0: update cpu_capacity 1024
+[    0.054815] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.066763] Setting up static identity map for 0x80100000 - 0x80100078
+[    0.067672] rcu: Hierarchical SRCU implementation.
+[    0.067703] rcu: 	Max phase no-delay instances is 1000.
+[    0.072444] smp: Bringing up secondary CPUs ...
+[    0.073255] smp: Brought up 1 node, 1 CPU
+[    0.073325] SMP: Total of 1 processors activated (48.00 BogoMIPS).
+[    0.073400] CPU: All CPU(s) started in SVC mode.
+[    0.079711] Memory: 427884K/524288K available (15360K kernel code, 1259K rwdata, 4444K rodata, 1024K init, 391K bss, 29568K reserved, 65536K cma-reserved, 0K highmem)
+[    0.088794] devtmpfs: initialized
+[    0.106879] VFP support v0.3: implementor 41 architecture 2 part 30 variant 7 rev 5
+[    0.129451] posixtimers hash table entries: 512 (order: 0, 4096 bytes, linear)
+[    0.129879] futex hash table entries: 256 (16384 bytes on 1 NUMA nodes, total 16 KiB, linear).
+[    0.160672] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.174650] DMA: preallocated 256 KiB pool for atomic coherent allocations
+[    0.180734] thermal_sys: Registered thermal governor 'step_wise'
+[    0.181344] cpuidle: using governor menu
+[    0.181820] CPU identified as i.MX6UL, silicon rev 1.0
+[    0.195565] /soc/interrupt-controller@a01000: Fixed dependency cycle(s) with /soc/interrupt-controller@a01000
+[    0.196532] /soc/bus@2000000/gpc@20dc000: Fixed dependency cycle(s) with /soc/bus@2000000/clock-controller@20c4000
+[    0.196629] /soc/bus@2000000/clock-controller@20c4000: Fixed dependency cycle(s) with /soc/bus@2000000/gpc@20dc000
+[    0.249630] /panel: Fixed dependency cycle(s) with /soc/bus@2100000/lcdif@21c8000
+[    0.249684] /soc/bus@2100000/lcdif@21c8000: Fixed dependency cycle(s) with /panel
+[    0.253212] hw-breakpoint: found 5 (+1 reserved) breakpoint and 4 watchpoint registers.
+[    0.253284] hw-breakpoint: maximum watchpoint size is 8 bytes.
+[    0.261559] imx6ul-pinctrl 20e0000.pinctrl: initialized IMX pinctrl driver
+[    0.263366] imx6ul-pinctrl 2290000.pinctrl: no groups defined in /soc/bus@2200000/pinctrl@2290000
+[    0.263523] imx6ul-pinctrl 2290000.pinctrl: initialized IMX pinctrl driver
+[    0.268635] kprobes: kprobe jump-optimization is enabled. All kprobes are optimized if possible.
+[    0.283956] gpio gpiochip0: Static allocation of GPIO base is deprecated, use dynamic allocation.
+[    0.298330] gpio gpiochip1: Static allocation of GPIO base is deprecated, use dynamic allocation.
+[    0.303793] gpio gpiochip2: Static allocation of GPIO base is deprecated, use dynamic allocation.
+[    0.307112] gpio gpiochip3: Static allocation of GPIO base is deprecated, use dynamic allocation.
+[    0.311574] gpio gpiochip4: Static allocation of GPIO base is deprecated, use dynamic allocation.
+[    0.329816] SCSI subsystem initialized
+[    0.331586] usbcore: registered new interface driver usbfs
+[    0.331820] usbcore: registered new interface driver hub
+[    0.331948] usbcore: registered new device driver usb
+[    0.338338] i2c i2c-0: IMX I2C adapter registered
+[    0.345681] i2c i2c-1: IMX I2C adapter registered
+[    0.346725] mc: Linux media interface: v0.10
+[    0.346880] videodev: Linux video capture interface: v2.00
+[    0.347373] pps_core: LinuxPPS API ver. 1 registered
+[    0.347387] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.347438] PTP clock support registered
+[    0.349092] Advanced Linux Sound Architecture Driver Initialized.
+[    0.365689] Bluetooth: Core ver 2.22
+[    0.365919] NET: Registered PF_BLUETOOTH protocol family
+[    0.365935] Bluetooth: HCI device and connection manager initialized
+[    0.366074] Bluetooth: HCI socket layer initialized
+[    0.366130] Bluetooth: L2CAP socket layer initialized
+[    0.366290] Bluetooth: SCO socket layer initialized
+[    0.368345] vgaarb: loaded
+[    0.372562] clocksource: Switched to clocksource mxc_timer1
+[    0.394609] NET: Registered PF_INET protocol family
+[    0.397041] IP idents hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[    0.399814] tcp_listen_portaddr_hash hash table entries: 512 (order: 0, 4096 bytes, linear)
+[    0.399907] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.399985] TCP established hash table entries: 4096 (order: 2, 16384 bytes, linear)
+[    0.400141] TCP bind hash table entries: 4096 (order: 4, 65536 bytes, linear)
+[    0.400298] TCP: Hash tables configured (established 4096 bind 4096)
+[    0.401936] UDP hash table entries: 256 (order: 2, 14336 bytes, linear)
+[    0.403394] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.406401] RPC: Registered named UNIX socket transport module.
+[    0.406484] RPC: Registered udp transport module.
+[    0.406499] RPC: Registered tcp transport module.
+[    0.406511] RPC: Registered tcp-with-tls transport module.
+[    0.406542] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.409535] PCI: CLS 0 bytes, default 64
+[    0.415422] Trying to unpack rootfs image as initramfs...
+[    0.427158] Initialise system trusted keyrings
+[    0.429342] workingset: timestamp_bits=30 (anon: 25) max_order=17 bucket_order=0 (anon: 0)
+[    0.444882] NFS: Registering the id_resolver key type
+[    0.445210] Key type id_resolver registered
+[    0.445239] Key type id_legacy registered
+[    0.445515] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[    0.445626] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver Registering...
+[    0.445977] jffs2: version 2.2. (NAND) © 2001-2006 Red Hat, Inc.
+[    0.447129] fuse: init (API version 7.46)
+[    0.449325] Key type asymmetric registered
+[    0.449386] Asymmetric key parser 'x509' registered
+[    0.449584] io scheduler mq-deadline registered
+[    0.449635] io scheduler kyber registered
+[    0.449738] io scheduler bfq registered
+[    0.475578] stmp_reset_block((ptrval)): module reset timeout
+[    0.475890] mxs-dma 1804000.dma-controller: probe with driver mxs-dma failed with error -110
+[    0.477097] imx_soc_device_init: failed to find fsl,imx6ul-ocotp regmap!
+[    0.503427] 2020000.serial: ttymxc0 MMIO:0x02020000 (irq = 198, base_baud = 5000000) is a IMX
+[    0.514809] printk: console [ttymxc0] enabled
+[    0.593242] panel-simple panel: Specify missing bus_format
+[    0.593328] panel-simple panel: Expected bpc in {6,8} but got: 0
+[    0.619231] mxsfb 21c8000.lcdif: [drm] [PLANE:37:plane-1] pixel format with alpha exposed but blend mode not setup. Please fix.
+[    0.633610] Freeing initrd memory: 1584K
+[    0.635389] [drm] Initialized mxsfb-drm 1.0.0 for 21c8000.lcdif on minor 0
+[    0.666234] mxsfb 21c8000.lcdif: Bridge does not provide bus format, assuming MEDIA_BUS_FMT_RGB888_1X24.
+[    0.666234] Please fix bridge driver by handling atomic_get_input_bus_fmts.
+[    0.715042] Console: switching to colour frame buffer device 100x30
+[    0.734952] mxsfb 21c8000.lcdif: [drm] fb0: mxsfb-drmdrmfb frame buffer device
+[    0.771487] brd: module loaded
+[    0.789738] loop: module loaded
+[    0.811246] CAN device driver interface
+[    0.813911] usbcore: registered new device driver r8152-cfgselector
+[    0.813998] usbcore: registered new interface driver r8152
+[    0.814073] usbcore: registered new interface driver lan78xx
+[    0.814164] usbcore: registered new interface driver asix
+[    0.814256] usbcore: registered new interface driver ax88179_178a
+[    0.814352] usbcore: registered new interface driver cdc_ether
+[    0.814439] usbcore: registered new interface driver smsc95xx
+[    0.814555] usbcore: registered new interface driver net1080
+[    0.814666] usbcore: registered new interface driver cdc_subset
+[    0.814735] usbcore: registered new interface driver zaurus
+[    0.814797] usbcore: registered new interface driver MOSCHIP usb-ethernet driver
+[    0.814863] usbcore: registered new interface driver cdc_ncm
+[    0.814922] usbcore: registered new interface driver r8153_ecm
+[    0.815304] usbcore: registered new interface driver usb-storage
+[    0.815654] usbcore: registered new device driver onboard-usb-dev
+[    0.821833] imx_usb 2184000.usb: No over current polarity defined
+[    0.834415] input: 20cc000.snvs:snvs-powerkey as /devices/platform/soc/2000000.bus/20cc000.snvs/20cc000.snvs:snvs-powerkey/input/input0
+[    0.838995] Goodix-TS 1-0014: supply AVDD28 not found, using dummy regulator
+[    0.839233] Goodix-TS 1-0014: supply VDDIO not found, using dummy regulator
+[    0.842163] Goodix-TS 1-0014: ID 1158, version: 0000
+[    0.846949] input: Goodix Capacitive TouchScreen as /devices/platform/soc/2100000.bus/21a4000.i2c/i2c-1/1-0014/input/input1
+[    0.859957] snvs_rtc 20cc000.snvs:snvs-rtc-lp: registered as rtc0
+[    0.860943] snvs_rtc 20cc000.snvs:snvs-rtc-lp: setting system clock to 2026-11-24T17:16:50 UTC (1795540610)
+[    0.861656] i2c_dev: i2c /dev entries driver
+[    0.871593] Bluetooth: HCI UART driver ver 2.3
+[    0.871730] Bluetooth: HCI UART protocol H4 registered
+[    0.871824] Bluetooth: HCI UART protocol LL registered
+[    0.871936] Bluetooth: HCI UART protocol Broadcom registered
+[    0.879971] sdhci-esdhc-imx 2190000.mmc: Got CD GPIO
+[    0.888572] usbcore: registered new interface driver usbhid
+[    0.888624] usbhid: USB HID core driver
+[    0.977625] mmc1: SDHCI controller on 2194000.mmc [2194000.mmc] using ADMA
+[    0.980614] mmc0: SDHCI controller on 2190000.mmc [2190000.mmc] using ADMA
+[    1.018464] mmc0: host does not support reading read-only switch, assuming write-enable
+[    1.019289] mmc0: new high speed SD card at address 579d
+[    1.020560] mmc1: host does not support reading read-only switch, assuming write-enable
+[    1.020890] mmc1: new high speed SDHC card at address 3fae
+[    1.024234] mmcblk0: mmc0:579d QEMU! 504 MiB
+[    1.029427] mmcblk1: mmc1:3fae QEMU! 8.00 GiB
+[    1.050494]  mmcblk0: p1
+[    1.122416] i2c i2c-0: <i2c_imx_write> write timedout
+[    1.124541] mag3110 0-000e: probe with driver mag3110 failed with error -110
+[    1.128961] hw perfevents: enabled with armv7_cortex_a7 PMU driver, 5 (8000000f) counters available
+[    1.352716] i2c i2c-1: <i2c_imx_read> read timedout
+[    1.662430] i2c i2c-1: <i2c_imx_write> write timedout
+[    1.662567] wm8960 1-001a: Failed to issue reset
+[    1.664451] wm8960 1-001a: probe with driver wm8960 failed with error -110
+[    1.667161] NET: Registered PF_INET6 protocol family
+[    1.673334] Segment Routing with IPv6
+[    1.673550] In-situ OAM (IOAM) with IPv6
+[    1.674011] NET: Registered PF_PACKET protocol family
+[    1.674049] can: controller area network core
+[    1.675983] NET: Registered PF_CAN protocol family
+[    1.676093] can: raw protocol
+[    1.676312] can: broadcast manager protocol
+[    1.676421] can: netlink gateway - max_hops=1
+[    1.677474] Key type dns_resolver registered
+[    1.695961] cpufreq: cpufreq_policy_online: CPU0: Running at unlisted initial frequency: 1188000 kHz, changing to: 528000 kHz
+[    1.701632] Registering SWP/SWPB emulation handler
+[    1.731613] Loading compiled-in X.509 certificates
+[    1.832598] fec 2188000.ethernet eth0: registered PHC device 0
+[    1.834284] imx_usb 2184000.usb: No over current polarity defined
+[    1.848960] ci_hdrc ci_hdrc.0: doesn't support gadget
+[    1.849475] ci_hdrc ci_hdrc.0: EHCI Host Controller
+[    1.849909] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 1
+[    1.862888] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
+[    1.865711] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 7.03
+[    1.867592] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    1.867646] usb usb1: Product: EHCI Host Controller
+[    1.867666] usb usb1: Manufacturer: Linux 7.3.6 ehci_hcd
+[    1.867680] usb usb1: SerialNumber: ci_hdrc.0
+[    1.875160] hub 1-0:1.0: USB hub found
+[    1.876227] hub 1-0:1.0: 1 port detected
+[    1.892332] ci_hdrc ci_hdrc.1: EHCI Host Controller
+[    1.892456] ci_hdrc ci_hdrc.1: new USB bus registered, assigned bus number 2
+[    1.913166] ci_hdrc ci_hdrc.1: USB 2.0 started, EHCI 1.00
+[    1.914487] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 7.03
+[    1.914930] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    1.914966] usb usb2: Product: EHCI Host Controller
+[    1.914982] usb usb2: Manufacturer: Linux 7.3.6 ehci_hcd
+[    1.914994] usb usb2: SerialNumber: ci_hdrc.1
+[    1.918289] hub 2-0:1.0: USB hub found
+[    1.918589] hub 2-0:1.0: 1 port detected
+[    1.928409] imx_thermal 20c8000.anatop:tempmon: invalid sensor calibration data
+[    1.928626] imx_thermal 20c8000.anatop:tempmon: error -EINVAL: failed to init from nvmem
+[    1.928869] imx_thermal 20c8000.anatop:tempmon: probe with driver imx_thermal failed with error -22
+[    1.940598] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+[    1.974756] Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+[    1.976183] Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+[    1.976406] clk: Disabling unused clocks
+[    1.977458] faux_driver regulatory: Direct firmware load for regulatory.db failed with error -2
+[    1.977687] cfg80211: failed to load regulatory.db
+[    1.979963] PM: genpd: Disabling unused power domains
+[    1.980870] ALSA device list:
+[    1.980990]   No soundcards found.
+[    2.018020] Freeing unused kernel image (initmem) memory: 1024K
+[    2.024470] Run /init as init process
+/etc/init.d/rcS: line 6: can't create /proc/sys/kernel/hotplug: nonexistent directory
+[    2.656506] Console: switching to colour dummy device 80x30
+imx6ull-mini: rootfs ready
+
+Please press Enter to activate this console. [   12.024938] platform backlight-display: deferred probe pending: pwm-backlight: unable to request PWM
