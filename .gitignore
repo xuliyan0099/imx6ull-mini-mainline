@@ -12,6 +12,10 @@
 
 # 本机环境说明（路径/凭据/外部机器，仅本地）
 /docs/local-env.md
+/docs/beelink-build-container.md
+
+# 导出的编译容器镜像包（仅本地分发用）
+/docker/
 
 *.o
 *.a
