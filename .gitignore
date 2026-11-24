@@ -10,6 +10,9 @@
 # 离线 bundle
 /patches/*.bundle
 
+# 本机环境说明（路径/凭据/外部机器，仅本地）
+/docs/local-env.md
+
 *.o
 *.a
 *.so
