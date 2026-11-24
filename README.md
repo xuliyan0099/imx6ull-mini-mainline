@@ -67,6 +67,9 @@ bash tools/build-all.sh          # 编 U-Boot / 内核 / LVGL / BusyBox，产物
 内网或离线镜像：`fetch-sources.sh` 支持 `IM6_UB_URL / IM6_LX_URL / IM6_BB_URL / IM6_LV_URL`
 指向镜像地址，`IM6_SRC` 可改源码目录；`IM6_FORCE=1` 强制重拉。
 
+部分网络访问 busybox.net 会被 TLS 重置，脚本会自动回退到 Buildroot / Alpine 的 distfiles 镜像；
+都不通时把包下到本地，用 `IM6_BB_FILE=/path/busybox-1.38.0.tar.bz2`（内核同理 `IM6_LX_FILE`）指定。
+
 编译慢的话把 `src/` 放到本地 ext4 盘（如 `IM6_SRC=/tmp/im6-src`），别放在 Windows 的 9p 挂载盘上。
 
 ## 接入统一 QEMU

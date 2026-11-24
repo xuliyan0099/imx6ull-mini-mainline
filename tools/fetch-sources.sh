@@ -3,8 +3,12 @@
 #   bash tools/fetch-sources.sh
 # 可选环境变量（内网镜像/离线包时用）：
 #   IM6_SRC=/path/to/src          源码放哪儿，默认 <repo>/src
-#   IM6_UB_URL / IM6_LX_URL / IM6_BB_URL / IM6_LV_URL
+#   IM6_UB_URL / IM6_LX_URL / IM6_BB_URL / IM6_LV_URL   主下载地址
+#   IM6_LX_FILE / IM6_BB_FILE     已下载好的 tar 包，直接用，不再联网
 #   IM6_FORCE=1                   已存在也重新拉取
+#
+# 网络受限时（如 busybox.net 被 TLS 重置）脚本会自动换备用镜像；
+# 都不通就把包下到本地后用 IM6_BB_FILE 指过来。
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
@@ -26,6 +30,21 @@ LV_URL=${IM6_LV_URL:-https://github.com/lvgl/lvgl.git}
 
 : "${IM6_FORCE:=0}"
 
+# 依次尝试若干地址，第一个成功的留下并返回 0
+dl() {  # dl <目标文件> <url...>
+  local out=$1; shift
+  local u
+  for u in "$@"; do
+    echo "   下载 $u"
+    if curl -fL --retry 3 --connect-timeout 20 -o "$out" "$u"; then
+      return 0
+    fi
+    echo "   失败，换下一个源"
+  done
+  echo "!! 所有下载源都失败，请手动下载后用 IM6_*_FILE 指定本地包" >&2
+  return 1
+}
+
 echo "== U-Boot $UB_TAG =="
 if [ ! -d "$SRC/u-boot/.git" ] || [ "$IM6_FORCE" = 1 ]; then
   rm -rf "$SRC/u-boot"
@@ -43,7 +62,12 @@ echo "== Linux $LX_VER =="
 if [ ! -f "$SRC/linux/Makefile" ] || [ "$IM6_FORCE" = 1 ]; then
   rm -rf "$SRC/linux" "$SRC/linux-$LX_VER"
   TMP=$(mktemp -d)
-  curl -fL --retry 3 -o "$TMP/linux.tar.xz" "$LX_URL"
+  if [ -n "${IM6_LX_FILE:-}" ]; then
+    cp "$IM6_LX_FILE" "$TMP/linux.tar.xz"
+  else
+    dl "$TMP/linux.tar.xz" "$LX_URL" \
+      "https://mirrors.edge.kernel.org/pub/linux/kernel/v7.x/linux-$LX_VER.tar.xz"
+  fi
   echo "$LX_SHA  $TMP/linux.tar.xz" | sha256sum -c -
   tar -xJf "$TMP/linux.tar.xz" -C "$SRC"
   mv "$SRC/linux-$LX_VER" "$SRC/linux"
@@ -61,7 +85,14 @@ echo "== BusyBox $BB_VER =="
 if [ ! -f "$SRC/busybox/Makefile" ] || [ "$IM6_FORCE" = 1 ]; then
   rm -rf "$SRC/busybox" "$SRC/busybox-$BB_VER"
   TMP=$(mktemp -d)
-  curl -fL --retry 3 -o "$TMP/bb.tar.bz2" "$BB_URL"
+  if [ -n "${IM6_BB_FILE:-}" ]; then
+    cp "$IM6_BB_FILE" "$TMP/bb.tar.bz2"
+  else
+    # busybox.net 在部分网络下 TLS 被重置，备用 Buildroot / Alpine distfiles 镜像
+    dl "$TMP/bb.tar.bz2" "$BB_URL" \
+      "https://sources.buildroot.net/busybox/busybox-$BB_VER.tar.bz2" \
+      "https://distfiles.alpinelinux.org/distfiles/edge/busybox-$BB_VER.tar.bz2"
+  fi
   echo "$BB_SHA  $TMP/bb.tar.bz2" | sha256sum -c -
   tar -xjf "$TMP/bb.tar.bz2" -C "$SRC"
   mv "$SRC/busybox-$BB_VER" "$SRC/busybox"
