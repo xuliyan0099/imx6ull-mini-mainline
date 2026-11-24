@@ -42,7 +42,7 @@ imx6ull_port/                    # 本仓库
 
 ```bash
 sudo apt install build-essential bison flex bc libssl-dev cpio gzip u-boot-tools \
-                 gcc-arm-linux-gnueabihf device-tree-compiler
+                 gcc-arm-linux-gnueabihf device-tree-compiler e2fsprogs fdisk
 ```
 
 ```bash
@@ -85,11 +85,46 @@ bootz 0x80800000 0x84000000 0x83000000
 
 ## 烧到真板
 
+### 一键整盘镜像（推荐）
+
+```bash
+bash tools/build-all.sh                 # 先出四个产物
+bash tools/make-sdcard-image.sh         # 合成 out/imx6ull-mini-sdcard.img（默认 256 MB）
+```
+
+生成的 `.img` 是**整盘镜像**，两端都能直接烧：
+
+```bash
+# Linux
+dd if=out/imx6ull-mini-sdcard.img of=/dev/sdX bs=4M status=progress conv=fsync
+```
+
+```powershell
+# Windows（管理员 PowerShell，等价 dd）
+.\tools\burn-sdcard.ps1 -Image .\out\imx6ull-mini-sdcard.img -DiskNumber 3
+```
+
+Windows 也可用 Win32DiskImager / Rufus / balenaEtcher 选**整盘**写入，不要只拷文件。
+
+镜像布局（与 `CONFIG_BOOTCOMMAND` 对齐）：
+
+| 位置 | 内容 |
+| --- | --- |
+| 扇区 0 | MBR，单个分区 1（`83` Linux，起始 4 MiB，`bootable`） |
+| 偏移 `0x400` | `u-boot-dtb.imx`（i.MX6ULL Boot ROM 的 IVT 位置；环境变量区 `0xC0000` 在 4 MiB 之前，不冲突） |
+| 分区 1 | ext4 `imx6ull-mini`：`/boot/zImage`、`/boot/imx6ull-alientek-mini-4.3.dtb`、BusyBox 安装树、`/usr/bin/lvgl_demo` |
+
+U-Boot 的 `bootcmd` 是 `ext4load mmc 0:1 /boot/zImage … root=/dev/mmcblk0p1`，
+所以插 SD 卡（mmc 0）就按分区 1 当根文件系统启动，板上电即可进 shell + LVGL 仪表盘。
+`IM6_IMG_MB` 可改镜像大小，`IM6_ROOTFS_STAGE` 可换 rootfs 安装树。
+
+### 手工分层烧写
+
 | 产物 | 烧写位置 |
 | --- | --- |
 | `out/u-boot-dtb.imx` | SD/eMMC 偏移 `0x400`（`dd bs=512 seek=2` 或 MfgTool） |
 | `out/zImage`、`out/imx6ull-alientek-mini-4.3.dtb` | 第一分区 `/boot/`（U-Boot `ext4load ... /boot/zImage`） |
-| `out/rootfs-mini.uimg` | initramfs 方式：`fatload` 到 0x84000000；常驻系统可解包成 ext4 根分区 |
+| `out/rootfs-mini.uimg` | initramfs 方式：`fatload` 到 0x84000000；常驻系统用 `components/busybox-rootfs/out/rootfs` 铺到 ext4 分区 |
 
 ## 验证结果（2026-11-25，QEMU 11.1.0 / `mcimx6ull-alientek`）
 
@@ -112,7 +147,7 @@ cd components/lvgl && git checkout -b feat/xxx && ... && git push    # 组件里
 
 - QEMU 不实现 `imx_thermal` 校准数据与 `pwm-backlight`，日志两条 probe 失败，不影响显示。
 - QEMU 的 GT911 模型只报单点，`TOUCH` 恒显示 `0,0`；真板才有真实坐标。
-- 未提供 eMMC 整盘烧写镜像，`uboot-emmc.img` 仍是既有基座。
+- SD 卡整盘镜像（`tools/make-sdcard-image.sh`）已提供；**eMMC 整盘镜像仍未提供**，`uboot-emmc.img` 是既有基座。
 - `lvgl_demo` 为静态 glibc 链接；要塞进厂商动态 rootfs 需换 SDK 编译（见 `docs/porting.md`）。
 
 许可：本仓库脚本与文档 MIT；四个组件仓库各自注明，上游源码遵循其原许可（GPL-2.0 / GPL-2.0+ / MIT）。
