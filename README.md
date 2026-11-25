@@ -29,7 +29,8 @@ imx6ull_port/                    # 本仓库
 │   ├── install-to-qemu.sh       # 按统一命名装进 qemu/images
 │   ├── verify-qemu.sh           # 统一 QEMU 冷启动 + 抓屏
 │   └── ppm2png.py
-├── docs/                        # porting.md / pitfalls.md（12 条）/ recovery.md / 抓屏证据
+├── docs/                        # porting.md / pitfalls.md（12 条）/ recovery.md / yocto-build.md / 抓屏证据
+├── yocto/                       # 第二条路线：poky scarthgap 5.0 构建容器 + BSP 层 + 四个 externalsrc 配方
 ├── recovered/                   # 反编译得到的 dts 与抽出的内核 config（溯源用）
 ├── patches/                     # 离线 git bundle（不入库）
 ├── reference/                   # 旧 7.3.5 固件原件（仅本地对照，不入库）
@@ -134,6 +135,20 @@ U-Boot 的 `bootcmd` 是 `ext4load mmc 0:1 /boot/zImage … root=/dev/mmcblk0p1`
 - DTB 与旧固件逐字节一致（sha256 `1a41ee56…f95f9a`）。
 
 ![QEMU 启动画面](docs/qemu-boot.png)
+
+## Yocto 路线（第二条构建方式）
+
+同一套源码也可以用 poky scarthgap 5.0 编，四个组件通过 `externalsrc` 直接挂进 Yocto，
+产出 `rootfs.ext4`、`rootfs.tar.bz2`、包清单，以及 256 MB 的 SD 整盘镜像
+`out/yocto/imx6ull-mini-yocto-sdcard.img`：
+
+```bash
+docker build -t im6-yocto:ubuntu24 yocto/
+docker run --rm -v $PWD/..:/work -w /work/repo -u 1000:1000 im6-yocto:ubuntu24 bash -lc 'bash tools/yocto-build.sh'
+bash tools/make-sdcard-from-yocto.sh
+```
+
+细节（机器定义、四个配方、13 条环境坑）见 `docs/yocto-build.md`。
 
 ## 维护 submodule
 

@@ -1,0 +1,4 @@
+#!/bin/sh
+# 覆盖 poky 的 update_mandb 钩子：本 rootfs 不装 man-db，也没有 /etc/man_db.conf，
+# 原脚本 sed 该文件会直接让 do_rootfs 失败，这里什么都不做。
+exit 0

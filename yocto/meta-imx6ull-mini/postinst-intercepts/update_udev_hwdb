@@ -1,0 +1,4 @@
+#!/bin/sh
+# 空实现：最小 rootfs 里没有对应工具（desktop-file-utils / fontconfig / mime-db / gdk-pixbuf / udev / gio 等），
+# poky 原脚本会直接失败并把 do_rootfs 打挂；这些缓存对板子没用，统一跳过。
+exit 0
